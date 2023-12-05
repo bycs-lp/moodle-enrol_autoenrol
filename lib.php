@@ -49,7 +49,7 @@ class enrol_autoenrol_plugin extends enrol_plugin {
      * enrolstartdate => When start to enrol
      * enrolenddate => When stop to enrol
      * customint1 => Enrol on course access, on login or with user confirmation
-     * customint2 => -- NOT USED -- Old group field filter
+     * customint2 => Show welcomemessage also on enrol page.
      * customint3 => Longtime no see unenrol
      * customint4 => New enrolment enabled
      * customint5 => Enrolment Limit number
@@ -796,6 +796,7 @@ class enrol_autoenrol_plugin extends enrol_plugin {
         $fields['notifyall']       = $notifyall;
         $fields['expirythreshold'] = $this->get_config('expirythreshold');
         $fields['customint1']      = 0;
+        $fields['customint2']      = 0;
         $fields['customint3']      = $this->get_config('longtimenosee');
         $fields['customint4']      = $this->get_config('newenrols');
         $fields['customint5']      = $this->get_config('maxenrolled');
@@ -928,16 +929,10 @@ class enrol_autoenrol_plugin extends enrol_plugin {
         $course = $DB->get_record('course', ['id' => $instance->courseid], '*', MUST_EXIST);
         $context = context_course::instance($course->id);
 
-        $a = new stdClass();
-        $a->coursename = format_string($course->fullname, true, ['context' => $context]);
-        $a->profileurl = new moodle_url('/user/view.php', ['id' => $user->id, 'course' => $course->id]);
-        $a->link = course_get_url($course)->out();
+        // Get the welcome message and its context.
+        list($message, $a) = \enrol_autoenrol\welcomemessage::get_welcomemessage($instance);
 
         if (trim($instance->customtext1) !== '') {
-            $message = $instance->customtext1;
-            $key = ['{$a->coursename}', '{$a->profileurl}', '{$a->link}', '{$a->fullname}', '{$a->email}'];
-            $value = [$a->coursename, $a->profileurl, $a->link, fullname($user), $user->email];
-            $message = str_replace($key, $value, $message);
             if (strpos($message, '<') === false) {
                 // Plain text only.
                 $messagetext = $message;
@@ -1161,6 +1156,11 @@ class enrol_autoenrol_plugin extends enrol_plugin {
         $mform->addElement('textarea', 'customtext1',
                 get_string('customwelcomemessage', 'enrol_autoenrol'), ['cols' => '60', 'rows' => '8']);
         $mform->addHelpButton('customtext1', 'customwelcomemessage', 'enrol_autoenrol');
+
+        // Self unenrol.
+        $mform->addElement('selectyesno', 'customint2', get_string('showwelcomemessageonconfirmationpage', 'enrol_autoenrol'));
+        $mform->setType('customint2', PARAM_INT);
+        $mform->setDefault('customint2', $this->get_config('showwelcomemessageonconfirmationpage'));
 
         // Filter section.
         $mform->addElement('header', 'filtersection', get_string('filtering', 'enrol_autoenrol'));
