@@ -61,6 +61,8 @@ class enrol_autoenrol_plugin extends enrol_plugin {
      * customchar3 => Group by field name
      * customtext1 => Welcome message
      * customtext2 => Conditional rule
+     * customtext3 => -- NOT USED --
+     * customtext4 => CSS Styles
      */
 
     /**
@@ -1161,6 +1163,11 @@ class enrol_autoenrol_plugin extends enrol_plugin {
         $mform->addElement('selectyesno', 'customint2', get_string('showwelcomemessageonconfirmationpage', 'enrol_autoenrol'));
         $mform->setType('customint2', PARAM_INT);
         $mform->setDefault('customint2', $this->get_config('showwelcomemessageonconfirmationpage'));
+
+        // Welcome message text.
+        $mform->addElement('textarea', 'customtext4',
+                get_string('customcssstyles', 'enrol_autoenrol'), array('cols' => '60', 'rows' => '8'));
+        $mform->addHelpButton('customtext4', 'customcssstyles', 'enrol_autoenrol');
 
         // Filter section.
         $mform->addElement('header', 'filtersection', get_string('filtering', 'enrol_autoenrol'));

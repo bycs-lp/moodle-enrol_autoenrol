@@ -61,6 +61,7 @@ $string['editselectedusers'] = 'Edit selected user enrolments';
 $string['emptyfield'] = 'No {$a}';
 $string['enrolenddate'] = 'End date';
 $string['enrolenddate_help'] = 'If enabled, users will be enrolled until this date only.';
+$string['customcssstyles'] = 'Customstyles';
 $string['enrolme'] = 'Enrol me';
 $string['enrolperiod'] = 'Enrolment duration';
 $string['enrolperiod_desc'] = 'Default length of time that the enrolment is valid. If set to zero, the enrolment duration will be unlimited by default.';

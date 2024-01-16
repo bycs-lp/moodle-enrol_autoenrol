@@ -88,5 +88,7 @@ class enrol_form extends moodleform {
         $mform->addElement('hidden', 'instance');
         $mform->setType('instance', PARAM_INT);
         $mform->setDefault('instance', $instance->id);
+
+        $mform->addElement('html', "<style>" . $instance->customtext4 . "</style>");
     }
 }
