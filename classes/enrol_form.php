@@ -77,7 +77,7 @@ class enrol_form extends moodleform {
 
         if (!empty($instance->customint2)) {
             list($message) = welcomemessage::get_welcomemessage($instance);
-            $mform->addElement('html', format_text($message));
+            $mform->addElement('html', format_text($message, FORMAT_MOODLE, ['noclean' => true]));
         }
         $this->add_action_buttons(false, get_string('enrolme', 'enrol_autoenrol'));
 
