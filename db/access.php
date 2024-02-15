@@ -29,6 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 $capabilities = [
 
     'enrol/autoenrol:config'      => [
+        'riskbitmask' => RISK_XSS | RISK_SPAM,
         'captype'      => 'write',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes'   => [
