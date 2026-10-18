@@ -849,7 +849,8 @@ class enrol_autoenrol_plugin extends enrol_plugin {
 
             $groupid = 0;
             if (!empty($name)) {
-                $groupid = $this->get_group($instance, $name);
+                // Only a group name configured in the instance may adopt an existing group.
+                $groupid = $this->get_group($instance, $name, !empty($instance->customchar1));
             }
 
             // Check if this instance already added this user to a group and remove membership if needed.
@@ -884,13 +885,14 @@ class enrol_autoenrol_plugin extends enrol_plugin {
      *
      * @param stdClass $instance
      * @param string   $groupname
+     * @param bool     $trustedname true if the group name is configured in the instance and not taken from user data
      *
      * @return int|mixed id of the group
      *
      * @throws coding_exception
      * @throws moodle_exception
      */
-    private function get_group(stdClass $instance, $groupname) {
+    private function get_group(stdClass $instance, $groupname, bool $trustedname = false) {
         global $DB;
 
         // Try to get group from idnumber.
@@ -899,7 +901,7 @@ class enrol_autoenrol_plugin extends enrol_plugin {
 
         $group = $DB->get_record('groups', ['idnumber' => $idnumber, 'courseid' => $instance->courseid]);
 
-        if ($group == null) {
+        if ($group == null && $trustedname) {
             // If not exists idnumber Try to get group from name.
             $group = $DB->get_record('groups', ['name' => $groupname, 'courseid' => $instance->courseid]);
         }
