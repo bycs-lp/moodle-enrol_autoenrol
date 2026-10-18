@@ -39,23 +39,26 @@ class welcomemessage {
      * Get the welcomemessage.
      *
      * @param object $instance enrol instance
+     * @param object|null $user enrolled user, defaults to the current user
      * @return array ["messagetext", [message context]]
      */
-    public static function get_welcomemessage(object $instance): array {
+    public static function get_welcomemessage(object $instance, ?object $user = null): array {
         global $CFG, $DB, $USER;
+
+        $user = $user ?? $USER;
 
         $course = $DB->get_record('course', ['id' => $instance->courseid], '*', MUST_EXIST);
         $context = \context_course::instance($course->id);
 
         $a = new \stdClass();
         $a->coursename = format_string($course->fullname, true, ['context' => $context]);
-        $a->profileurl = new \moodle_url($CFG->wwwroot . '/user/view.php', ['id' => $USER->id, 'course' => $course->id]);
+        $a->profileurl = new \moodle_url($CFG->wwwroot . '/user/view.php', ['id' => $user->id, 'course' => $course->id]);
         $a->link = course_get_url($course)->out();
 
         $message = $instance->customtext1;
 
         $key = ['{$a->coursename}', '{$a->profileurl}', '{$a->link}', '{$a->fullname}', '{$a->email}'];
-        $value = [$a->coursename, $a->profileurl, $a->link, fullname($USER), $USER->email];
+        $value = [$a->coursename, $a->profileurl, $a->link, fullname($user), $user->email];
 
         return [str_replace($key, $value, $message), $a];
     }
