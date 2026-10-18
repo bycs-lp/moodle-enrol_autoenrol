@@ -932,7 +932,7 @@ class enrol_autoenrol_plugin extends enrol_plugin {
         $context = context_course::instance($course->id);
 
         // Get the welcome message and its context.
-        list($message, $a) = \enrol_autoenrol\welcomemessage::get_welcomemessage($instance);
+        list($message, $a) = \enrol_autoenrol\welcomemessage::get_welcomemessage($instance, $user);
 
         if (trim($instance->customtext1) !== '') {
             if (strpos($message, '<') === false) {
